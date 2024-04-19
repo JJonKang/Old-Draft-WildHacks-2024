@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/dark.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Battery Display</title>
+    <style>
+        * {
+          font-family: serif;
+        }
+        .battery-container {
+            font-size: 24px;
+            line-height: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .battery {
+            margin-bottom: 20px; /* Increased margin-bottom */
+            position: relative; /* Added position relative for percentage alignment */
+        }
+        .segment-container {
+            display: flex;
+            flex-direction: column-reverse; /* Change to column-reverse to make segments vertical */
+            align-items: center;
+        }
+        .segment {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 1px solid #000;
+            margin: 2px 0;
+        }
+        .filled {
+            background-color: #0f0; /* Green color for filled segments */
+        }
+        .exceeded {
+            background-color: #f00; /* Red color for exceeded segments */
+        }
+        .empty {
+            background-color: #fff; /* White color for empty segments */
+        }
+        .percentage {
+            position: absolute;
+            bottom: -25px; /* Adjust as needed */
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        /* Existing styles */
+        .add-battery-button {
+            margin-top: 20px; /* Add margin between the last battery and the add button */
+            border: 2px solid lightblue; /* Add a light blue border */
+            padding: 10px 20px; /* Add some padding for better appearance */
+            cursor: pointer; /* Change the cursor to a pointer when hovering over the button */
+            transition: background-color 0.3s ease; /* Smooth transition for background color change */
+        }
+        .add-battery-button:hover {
+            background-color: lightblue; /* Change the background color on hover */
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="battery-container">
+        <h1>ECO TALLY</h1>
+
+        <!-- Electricity Consumption Battery -->
+        <h2>Electricity</h2>
+        <label for="data1">Enter your electricity consumption limit for today: </label>
+        <input type="number" id="data1" min="0" max="100">
+        <br>
+        <label for="data1a">Enter the total amount of electricity used today: </label>
+        <input type="number" id="data1a" min="0" max="100">
+        <br>
+        <button onclick="drawBattery('batteryDisplay1', 'data1', 'data1a')">Generate Tally</button>
+        <div id="batteryDisplay1" class="battery"></div>
+
+        <!-- Gas Consumption Battery -->
+        <h2>Gas</h2>
+        <label for="data2">Enter your gas consumption limit for today: </label>
+        <input type="number" id="data2" min="0" max="100">
+        <br>
+        <label for="data2a">Enter the total amount of gas used today: </label>
+        <input type="number" id="data2a" min="0" max="100">
+        <br>
+        <button onclick="drawBattery('batteryDisplay2', 'data2', 'data2a')">Generate Tally</button>
+        <div id="batteryDisplay2" class="battery"></div>
+
+        <!-- Water Consumption Battery -->
+        <h2>Water</h2>
+        <label for="data3">Enter your water consumption limit for today: </label>
+        <input type="number" id="data3" min="0" max="100">
+        <br>
+        <label for="data3a">Enter the total amount of water used today: </label>
+        <input type="number" id="data3a" min="0" max="100">
+        <br>
+        <button onclick="drawBattery('batteryDisplay3', 'data3', 'data3a')">Generate Tally</button>
+        <div id="batteryDisplay3" class="battery"></div>
+
+        <!-- Trash Production Battery -->
+        <h2>Trash Production</h2>
+        <label for="data4">Enter your trash production limit for today: </label>
+        <input type="number" id="data4" min="0" max="100">
+        <br>
+        <label for="data4a">Enter the total amount of trash created today: </label>
+        <input type="number" id="data4a" min="0" max="100">
+        <br>
+        <button onclick="drawBattery('batteryDisplay4', 'data4', 'data4a')">Generate Tally</button>
+        <div id="batteryDisplay4" class="battery"></div>
+
+        <!-- Add Battery Button -->
+        <button class="add-battery-button" onclick="addBatteryInput()">Add Another Tally</button>
+    </div>
+
+    <script>
+        let batteryCount = 4; // Starting with 4 batteries
+
+        function drawBattery(displayId, goalId, consumedId) {
+            let goal = parseInt(document.getElementById(goalId).value);
+            let consumed = parseInt(document.getElementById(consumedId).value);
+
+            // Set default values to 0 if user input is empty
+            goal = isNaN(goal) ? 0 : goal;
+            consumed = isNaN(consumed) ? 0 : consumed;
+
+            const percentage = (consumed / goal) * 100;
+            const segments = 10; // Always set segments to 10
+
+            let filledSegments;
+            if (percentage > 100) {
+                filledSegments = segments; // If percentage exceeds 100%, fill all segments
+            } else {
+                filledSegments = Math.ceil((percentage / 100) * segments);
+            }
+
+            let segmentClass;
+            if (percentage > 100) {
+                segmentClass = 'exceeded'; // Use exceeded class if percentage exceeds 100%
+            } else {
+                segmentClass = 'filled';
+            }
+
+            let batteryHTML = `<div>Goal: ${goal}</div><div class='segment-container'>`;
+            for (let i = 0; i < segments; i++) {
+                batteryHTML += `<div class="segment ${i < filledSegments ? segmentClass : 'empty'}"></div>`;
+            }
+            batteryHTML += `</div><div class="percentage">${percentage.toFixed(2)}%</div>`; // Added percentage div
+
+            document.getElementById(displayId).innerHTML = batteryHTML;
+        }
+
+        function addBatteryInput() {
+            batteryCount++;
+            const batteryTitle = prompt("What do you want to conserve today?"); // Prompt for the battery title
+            if (batteryTitle) {
+                const batteryHTML = `
+                    <h2>${batteryTitle}</h2>
+                    <label for="data${batteryCount}">Enter your ${batteryTitle.toLowerCase()} consumption goal for today: </label>
+                    <input type="number" id="data${batteryCount}" min="0" max="100">
+                    <br>
+                    <label for="data${batteryCount}a">Enter the total amount for ${batteryTitle.toLowerCase()} used today: </label>
+                    <input type="number" id="data${batteryCount}a" min="0" max="100">
+                    <br>
+                    <button onclick="drawBattery('batteryDisplay${batteryCount}', 'data${batteryCount}', 'data${batteryCount}a')">Generate Tally</button>
+                    <div id="batteryDisplay${batteryCount}" class="battery"></div>
+                `;
+                const addBatteryButton = document.querySelector('.add-battery-button');
+                addBatteryButton.insertAdjacentHTML('beforebegin', batteryHTML); // Insert new battery input before the add button
+            }
+        }
+    </script>
+</body>
+</html>
