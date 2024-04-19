@@ -2,7 +2,7 @@
 April 6 - April 7, 2024.
 
 RETROSPECT:
-- Old version of the battery.html that was used for a project in WildHacks 2024. It is mainly here as a historical version of the actual final draft.
+- Working old version of the battery.html that was used for a project in WildHacks 2024. It is mainly here as a historical version of the actual final draft.
 - CSS is drastically different, with some alterations of the rest of HTML and Javascript.
 - Partnered with someone else to work on the frontend development, including how to show buttons, having the battery image, and creating the UI to look better.
 - Learned parts of CSS, HTML, Javascript, and React in order to work on the frontend.
