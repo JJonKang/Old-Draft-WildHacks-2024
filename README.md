@@ -7,8 +7,7 @@ RETROSPECT:
 - Partnered with someone else to work on the frontend development, including how to show buttons, having the battery image, and creating the UI to look better.
 - Learned parts of CSS, HTML, Javascript, and React in order to work on the frontend.
 
-For a small generalization of the project:
-Project (Eco Tally):
+For a small generalization of the Project: Eco Tally
 - Four person team.
 - Purpose of the project is to record data of the individual using the product about their waste generation, as well as warning them of any overgeneration.
 - Used Kintone as a database and backend.
